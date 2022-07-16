@@ -45,6 +45,13 @@ class ControlActorsAction(Action):
         racer = cast.get_first_actor("racers")
         racer.set_position(y)
 
+        if self._keyboard_service.is_key_down('space'):
+            hud = cast.get_first_actor("huds")
+            powerup = hud.get_powerup()
+            if powerup == "Destroy":
+                cast.remove_actors("drivers")
+                hud.set_powerup("")
+
         # Debugging
         # hud = cast.get_first_actor("huds")
         # hud.set_powerup(racer.get_position().get_y())

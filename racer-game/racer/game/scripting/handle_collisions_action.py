@@ -59,17 +59,20 @@ class HandleCollisionsAction(Action):
             driver_x = driver.get_position().get_x()
             driver_y = driver.get_position().get_y()
             driver_pos = [driver_x, driver_y]
-            if racer_pos == driver_pos and current_powerup != "invincible":
-                cast.remove_actors("drivers")
-                cast.remove_actors("powerups")
-                hud.remove_life()
-                lives = hud.get_lives()
-                if lives == 0:
-                    self._is_game_over = True
+            if racer_pos == driver_pos:
+                if current_powerup == "Invincible":
+                    hud.set_powerup("")
+                else:
+                    cast.remove_actors("drivers")
+                    cast.remove_actors("powerups")
+                    hud.remove_life()
+                    lives = hud.get_lives()
+                    if lives == 0:
+                        self._is_game_over = True
 
     def _handle_powerup_collision(self, cast):
         """Gives a random powerup to the racer when it collides with a powerup."""
-        powerups = ["invincible", "destroy"]
+        powerups = ["Invincible", "Destroy"]
         current_powerup = random.choice(powerups)
 
         racer = cast.get_first_actor("racers")
