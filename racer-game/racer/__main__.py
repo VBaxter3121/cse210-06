@@ -1,0 +1,44 @@
+import constants
+
+from game.casting.cast import Cast
+from game.casting.powerup import Powerup
+from game.casting.hud import HUD
+from game.casting.racer import Racer
+from game.casting.driver import Driver
+from game.casting.road import Road
+from game.scripting.script import Script
+from game.scripting.control_actors_action import ControlActorsAction
+from game.scripting.move_actors_action import MoveActorsAction
+from game.scripting.handle_collisions_action import HandleCollisionsAction
+from game.scripting.spawn_actors_action import SpawnActorsAction
+from game.scripting.draw_actors_action import DrawActorsAction
+from game.directing.director import Director
+from game.services.keyboard_service import KeyboardService
+from game.services.video_service import VideoService
+from game.shared.color import Color
+from game.shared.point import Point
+
+def main():
+    
+    # create the cast
+    cast = Cast()
+    cast.add_actor("racers", Racer())
+    cast.add_actor("huds", HUD())
+    cast.add_actor("roads", Road(cast))
+   
+    # start the game
+    keyboard_service = KeyboardService()
+    video_service = VideoService()
+
+    script = Script()
+    script.add_action("input", ControlActorsAction(keyboard_service))
+    script.add_action("update", MoveActorsAction())
+    script.add_action("update", HandleCollisionsAction())
+    script.add_action("update", SpawnActorsAction())
+    script.add_action("output", DrawActorsAction(video_service))
+    
+    director = Director(video_service)
+    director.start_game(cast, script)
+
+if __name__ == "__main__":
+    main()
