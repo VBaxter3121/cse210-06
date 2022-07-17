@@ -6,7 +6,7 @@ from game.shared.point import Point
 
 class ControlActorsAction(Action):
     """
-    An input action that controls the snake.
+    An input action that controls the racer.
     
     The responsibility of ControlActorsAction is to get the direction and move the racer.
 
@@ -33,25 +33,18 @@ class ControlActorsAction(Action):
         y = 0
         # up
         if self._keyboard_service.is_key_down('up'):
-            # self._direction = Point(0, -constants.CELL_SIZE * 4)
             y = -200
         # down
         elif self._keyboard_service.is_key_down('down'):
-            # self._direction = Point(0, constants.CELL_SIZE * 4)
             y = 200
-        else:
-            y = 0
         
         racer = cast.get_first_actor("racers")
         racer.set_position(y)
 
+        # use powerup (space)
         if self._keyboard_service.is_key_down('space'):
             hud = cast.get_first_actor("huds")
             powerup = hud.get_powerup()
             if powerup == "Destroy":
                 cast.remove_actors("drivers")
                 hud.set_powerup("")
-
-        # Debugging
-        # hud = cast.get_first_actor("huds")
-        # hud.set_powerup(racer.get_position().get_y())

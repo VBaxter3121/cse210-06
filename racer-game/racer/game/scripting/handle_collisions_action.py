@@ -10,7 +10,6 @@ class HandleCollisionsAction(Action):
     An update action that handles interactions between the actors.
     
     The responsibility of HandleCollisionsAction is to handle the following situations:
-    # The racer tries to move out of bounds
     The racer collides with a driver
     The racer collides with a powerup
     A driver reaches the left side of the screen
@@ -44,7 +43,10 @@ class HandleCollisionsAction(Action):
             self._handle_game_over(cast, script)
 
     def _handle_driver_collision(self, cast):
-        """Removes drivers and powerups and deducts a life when racer collides with a driver."""
+        """Removes drivers and powerups and deducts a life when racer collides with a driver.
+        
+        Args:
+            cast (Cast): The cast of Actors in the game."""
         racer = cast.get_first_actor("racers")
         racer_x = racer.get_position().get_x()
         racer_y = racer.get_position().get_y()
@@ -60,9 +62,11 @@ class HandleCollisionsAction(Action):
             driver_y = driver.get_position().get_y()
             driver_pos = [driver_x, driver_y]
             if racer_pos == driver_pos:
+                # Check for invicible powerup, if held, remove powerup and nullify collision
                 if current_powerup == "Invincible":
                     hud.set_powerup("")
                 else:
+                    # Remove all drivers and powerups upon loosing a life
                     cast.remove_actors("drivers")
                     cast.remove_actors("powerups")
                     hud.remove_life()
@@ -71,7 +75,10 @@ class HandleCollisionsAction(Action):
                         self._is_game_over = True
 
     def _handle_powerup_collision(self, cast):
-        """Gives a random powerup to the racer when it collides with a powerup."""
+        """Gives a random powerup to the racer when it collides with a powerup.
+        
+        Args:
+            cast (Cast): The cast of Actors in the game."""
         powerups = ["Invincible", "Destroy"]
         current_powerup = random.choice(powerups)
 
@@ -93,7 +100,10 @@ class HandleCollisionsAction(Action):
                 hud.set_powerup(current_powerup)
 
     def _handle_edge_delete(self, cast):
-        """Removes drivers and powerups that reach the left edge of the screen."""
+        """Removes drivers and powerups that reach the left edge of the screen.
+        
+        Args:
+            cast (Cast): The cast of Actors in the game."""
         powerups = cast.get_actors("powerups")
         for powerup in powerups:
             position = powerup.get_position()
@@ -138,9 +148,6 @@ class HandleCollisionsAction(Action):
             for actor in actors:
                 actor.set_color(constants.WHITE)
 
-            # updates = script.get_actions("updates")
-            # for update in updates:
-            #     script.remove_action("updates", update)
-
     def check_game_over(self):
+        """Returns the value of _is_game_over"""
         return self._is_game_over

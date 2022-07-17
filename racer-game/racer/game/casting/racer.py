@@ -27,10 +27,13 @@ class Racer(Actor):
         Args:
             position (Point): The given position.
         """
+        # Timer serves to force a delay between changing lanes
+        # In other words, after changing lanes, you cannot change
+        # lanes again for 5 frames.
         self._move_timer += 1
         if self._move_timer >= 5:
             self._has_moved = False
-            self._move_timer = 0
+        # If enough time has passed for movement and player inputs movement
         if self._has_moved == False and y != 0:
             x = constants.RACER_X
             y = self._position.get_y() + y
@@ -39,4 +42,6 @@ class Racer(Actor):
             elif y < 100:
                 y = 100
             self._position = Point(x, y)
+            # Triggers the timer
             self._has_moved = True
+            self._move_timer = 0

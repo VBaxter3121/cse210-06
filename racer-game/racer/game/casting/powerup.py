@@ -10,34 +10,19 @@ class Powerup(Actor):
     The responsibility of Powerup is to move itself."""
 
     def __init__(self):
-        """Creates a new instance of Driver."""
+        """Creates a new instance of Powerup."""
         super().__init__()
         self._text = "?"
         self._color = constants.GREEN
         self._velocity = Point(-constants.CELL_SIZE * 2, 0)
         self._font_size = constants.FONT_SIZE * 4
         self._is_new = True
-    #     self._lane = ""
-    #     self._set_lane()
 
     def move_next(self):
+        """Moves the actor to its next position according to its velocity."""
         super().move_next()
         self._is_new = False
 
     def check_new(self):
+        """Returns the value of _is_new"""
         return self._is_new
-
-    # def _set_lane(self):
-    #     """Randomly chooses a starting lane."""
-    #     lanes = ["top", "middle", "bottom"]
-    #     lane = random.choice(lanes)
-    #     self._lane = lane
-    #     x = constants.RIGHT_X
-    #     y = 0
-    #     if lanes == "top":
-    #         y = constants.LANE_TOP_Y
-    #     elif lanes == "middle":
-    #         y = constants.LANE_MIDDLE_Y
-    #     elif lanes == "bottom":
-    #         y = constants.LANE_BOTTOM_Y
-    #     self.set_position(Point(x, y))

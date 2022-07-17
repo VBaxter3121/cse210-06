@@ -19,40 +19,61 @@ class SpawnActorsAction(Action):
         self._spawn_timer = 0
 
     def execute(self, cast, script):
-        # updates = script.get_actions("updates")
-        # collisions = updates[1]
-        # if not collisions.check_game_over():
+        """Executes the SpawnActorsAction.
+        
+        Args:
+            cast (Cast): The cast of Actors in the game.
+            script (Script): The script of Actions in the game.
+        """
         self._spawn_timer += 1
         self._spawn_drivers(cast)
         self._spawn_powerups(cast)
 
     def _spawn_drivers(self, cast):
+        """Creates new drivers at semi-regular intervales.
+        
+        Args:
+            cast (Cast): The cast of Actors in the game.
+        """
+        # Wait at least every 10 frames before spawning more drivers
         if self._spawn_timer >= 10:
             spawn = random.randint(0, 100)
             if spawn >= 40:
                 self._spawn_timer = 0
-                # number = random.randint(1, 2)
+
                 lanes = [constants.LANE_BOTTOM_Y, constants.LANE_MIDDLE_Y, constants.LANE_TOP_Y]
-                # for i in range(number):
                 cast.add_actor("drivers", Driver())
                 lane = lanes[random.randint(0, len(lanes) - 1)]
-                # lanes.remove(lane)
+
                 drivers = cast.get_actors("drivers")
                 for driver in drivers:
+                    # Set position of newly spawned drivers without affecting the position of
+                    # already existing drivers.
                     if driver.check_new():
                         driver.set_position(Point(constants.RIGHT_X, lane))
 
     def _spawn_powerups(self, cast):
+        """Creates new powerups at semi-regular intervales.
+        
+        Args:
+            cast (Cast): The cast of Actors in the game.
+        """
         powerups = cast.get_actors("powerups")
+        # No more than one powerup on screen at a time
         if len(powerups) == 0:
+            # Wait at least every 10 frames before spawning more powerups
             if self._spawn_timer >= 10:
                 spawn = random.randint(0, 100)
                 if spawn >= 70:
                     self._spawn_timer = 0
+
                     lanes = [constants.LANE_BOTTOM_Y, constants.LANE_MIDDLE_Y, constants.LANE_TOP_Y]
                     cast.add_actor("powerups", Powerup())
                     lane = lanes[random.randint(0, len(lanes) - 1)]
+
                     powerups = cast.get_actors("powerups")
                     for powerup in powerups:
+                        # Set position of newly spawned powerups without affecting the position of
+                        # already existing powerups.
                         if powerup.check_new():
                             powerup.set_position(Point(constants.RIGHT_X, lane))
